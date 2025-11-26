@@ -21,8 +21,9 @@ public static class TaskEndpoints
 
         app.MapPost("/tasks", async (ITaskService service, CreateTaskDto dto) =>
         {
-            // TODO
-            return Results.Ok();
+            var created = await service.CreateAsync(dto);
+            return Results.Created($"tasks{created.Id}", created);
+            
         });
 
         app.MapPut("/tasks/{id:int}", async (ITaskService service, int id, UpdateTaskDto dto) =>

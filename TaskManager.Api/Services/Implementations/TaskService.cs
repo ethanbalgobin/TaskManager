@@ -5,10 +5,25 @@ using TaskManager.Api.Services.Interfaces;
 using TaskManager.Api.Data;
 using TaskManager.Api.DTOs;
 using TaskManager.Api.Models;
+using System.Reflection.Metadata.Ecma335;
 
 public class TaskService : ITaskService
 {
     private readonly TaskDbContext _context;
+
+    private static TaskResponseDto MapToDto(TodoTask entity)
+    {
+        return new TaskResponseDto
+        {
+            Id = entity.Id,
+            Title = entity.Title,
+            Description = entity.Description,
+            IsComplete = entity.IsComplete,
+            DueDate = entity.DueDate,
+            CreatedOn = entity.CreatedOn,
+            UpdatedOn = entity.UpdatedOn
+        };
+    }
 
     public TaskService(TaskDbContext context)
     {
@@ -30,7 +45,19 @@ public class TaskService : ITaskService
     public async Task<TaskResponseDto> CreateAsync(CreateTaskDto dto)
     {
         // TODO
-        throw new NotImplementedException();
+        var todo = new TodoTask
+        {
+            Title = dto.Title,
+            Description = dto.Description,
+            DueDate = dto.DueDate
+        };
+
+        _context.Add(todo);
+        await _context.SaveChangesAsync();
+
+        var result = MapToDto(todo);
+        return result;
+
     }
 
     public async Task<TaskResponseDto?> UpdateAsync(int id, UpdateTaskDto dto)
