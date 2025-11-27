@@ -5,8 +5,6 @@ using TaskManager.Api.Services.Interfaces;
 using TaskManager.Api.Data;
 using TaskManager.Api.DTOs;
 using TaskManager.Api.Models;
-using System.Reflection.Metadata.Ecma335;
-using System.Xml;
 
 public class TaskService : ITaskService
 {
