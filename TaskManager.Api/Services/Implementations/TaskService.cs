@@ -6,6 +6,7 @@ using TaskManager.Api.Data;
 using TaskManager.Api.DTOs;
 using TaskManager.Api.Models;
 using System.Reflection.Metadata.Ecma335;
+using System.Xml;
 
 public class TaskService : ITaskService
 {
@@ -83,8 +84,35 @@ public class TaskService : ITaskService
 
     public async Task<TaskResponseDto?> UpdateAsync(int id, UpdateTaskDto dto)
     {
-        // TODO
-        throw new NotImplementedException();
+        var entity = await _context.Tasks.FindAsync(id);
+
+        if (entity == null)
+        {
+            return null;
+        }
+
+        if (!string.IsNullOrEmpty(dto.Title))
+        {
+            entity.Title = dto.Title;
+        }
+        if (!string.IsNullOrEmpty(dto.Description))
+        {
+            entity.Description = dto.Description;
+        }
+        
+        entity.IsComplete = dto.IsComplete;
+
+        if (dto.DueDate != null)
+        {
+            entity.DueDate = dto.DueDate;
+        }
+
+        entity.UpdatedOn = DateTime.UtcNow;
+
+        _context.Update(entity);
+        await _context.SaveChangesAsync();
+        
+        return MapToDto(entity);
     }
 
     public async Task<bool> DeleteAsync(int id)

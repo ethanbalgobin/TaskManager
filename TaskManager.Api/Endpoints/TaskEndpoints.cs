@@ -21,7 +21,7 @@ public static class TaskEndpoints
 
             if (task == null)
             {
-                return Results.NotFound();
+                return Results.NotFound($"No task found with the id {id}");
             }
 
             return Results.Ok(task);
@@ -31,13 +31,18 @@ public static class TaskEndpoints
         {
             var created = await service.CreateAsync(dto);
             return Results.Created($"tasks{created.Id}", created);
-            
         });
 
         app.MapPut("/tasks/{id:int}", async (ITaskService service, int id, UpdateTaskDto dto) =>
         {
-            // TODO
-            return Results.Ok();
+            var updated = await service.UpdateAsync(id, dto);
+
+            if (updated == null)
+            {
+                return Results.NotFound($"No task exists with the id: {id}");
+            }
+
+            return Results.Ok(updated);
         });
 
         app.MapDelete("/tasks/{id:int}", async (ITaskService service, int id) =>
