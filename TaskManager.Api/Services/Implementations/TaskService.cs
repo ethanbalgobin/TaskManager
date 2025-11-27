@@ -32,14 +32,35 @@ public class TaskService : ITaskService
 
     public async Task<List<TaskResponseDto>> GetAllAsync(bool? isComplete, string? search)
     {
-        // TODO: Implement filtering logic
-        throw new NotImplementedException();
+        var query = _context.Tasks.AsQueryable();
+
+        if (isComplete.HasValue)
+        {
+            query = query.Where(t => t.IsComplete == isComplete.HasValue);
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(t => t.Title.Contains(search));
+        }
+
+        query = query.OrderBy(t => t.CreatedOn);
+
+        var tasks = await query.ToListAsync();
+
+        return tasks.Select(MapToDto).ToList();
     }
 
     public async Task<TaskResponseDto?> GetByIdAsync(int id)
     {
-        // TODO
-        throw new NotImplementedException();
+        var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+
+        if (task == null)
+        {
+            return null;
+        }
+        
+        return MapToDto(task);
     }
 
     public async Task<TaskResponseDto> CreateAsync(CreateTaskDto dto)

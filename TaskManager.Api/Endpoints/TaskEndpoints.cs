@@ -2,6 +2,7 @@
 
 using TaskManager.Api.Services.Interfaces;
 using TaskManager.Api.DTOs;
+using System.Reflection.Metadata.Ecma335;
 
 public static class TaskEndpoints
 {
@@ -9,14 +10,21 @@ public static class TaskEndpoints
     {
         app.MapGet("/tasks", async (ITaskService service, bool? isComplete, string? search) =>
         {
-            // TODO
-            return Results.Ok();
+            var tasks = await service.GetAllAsync(isComplete, search);
+
+            return Results.Ok(tasks);
         });
 
         app.MapGet("/tasks/{id:int}", async (ITaskService service, int id) =>
         {
-            // TODO
-            return Results.Ok();
+            var task = await service.GetByIdAsync(id);
+
+            if (task == null)
+            {
+                return Results.NotFound();
+            }
+
+            return Results.Ok(task);
         });
 
         app.MapPost("/tasks", async (ITaskService service, CreateTaskDto dto) =>
