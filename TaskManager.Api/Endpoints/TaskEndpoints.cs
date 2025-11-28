@@ -58,7 +58,13 @@ public static class TaskEndpoints
 
         app.MapPut("/tasks/{id:int}/complete", async (ITaskService service, int id) =>
         {
-            // TODO
+            var updated = await service.MarkCompleteAsync(id);
+
+            if (updated == false)
+            {
+                return Results.NotFound($"No task exists with the id {id}");
+            }
+
             return Results.Ok();
         });
 

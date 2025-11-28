@@ -130,7 +130,20 @@ public class TaskService : ITaskService
 
     public async Task<bool> MarkCompleteAsync(int id)
     {
-        // TODO
-        throw new NotImplementedException();
+        var entity = await _context.Tasks.FindAsync(id);
+
+        if (entity == null)
+        {
+            return false;
+        }
+
+        entity.IsComplete = true;
+        entity.UpdatedOn = DateTime.UtcNow;
+
+        _context.Update(entity);
+        await _context.SaveChangesAsync();
+
+        return true;
+
     }
 }
