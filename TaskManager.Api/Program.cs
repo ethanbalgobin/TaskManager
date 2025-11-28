@@ -4,8 +4,9 @@ using TaskManager.Api.Services.Implementations;
 using TaskManager.Api.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using Swashbuckle.AspNetCore.SwaggerGen; // Add this using directive
-using Microsoft.OpenApi.Models; // Add this using directive
+using Swashbuckle.AspNetCore.SwaggerGen;
+using FluentValidation;
+using TaskManager.Api.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,9 @@ builder.Services.AddScoped<ITaskService, TaskService>();
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// API Validator
+builder.Services.AddValidatorsFromAssemblyContaining<CreateTaskValidator>();
 
 var app = builder.Build();
 
