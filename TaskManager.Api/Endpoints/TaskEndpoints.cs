@@ -46,7 +46,13 @@ public static class TaskEndpoints
 
         app.MapDelete("/tasks/{id:int}", async (ITaskService service, int id) =>
         {
-            // TODO
+            var deleted = await service.DeleteAsync(id);
+
+            if (deleted == false)
+            {
+                return Results.NotFound($"No task exists with the id {id}");
+            }
+
             return Results.Ok();
         });
 

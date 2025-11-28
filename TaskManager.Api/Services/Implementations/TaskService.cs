@@ -115,8 +115,17 @@ public class TaskService : ITaskService
 
     public async Task<bool> DeleteAsync(int id)
     {
-        // TODO
-        throw new NotImplementedException();
+        var entity = await _context.Tasks.FindAsync(id);
+
+        if (entity == null)
+        {
+            return false;
+        }
+
+        _context.Tasks.Remove(entity);
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 
     public async Task<bool> MarkCompleteAsync(int id)
