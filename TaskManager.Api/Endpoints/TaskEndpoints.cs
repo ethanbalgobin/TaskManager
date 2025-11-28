@@ -2,6 +2,7 @@
 
 using TaskManager.Api.Services.Interfaces;
 using TaskManager.Api.DTOs;
+using FluentValidation;
 
 public static class TaskEndpoints
 {
@@ -26,14 +27,28 @@ public static class TaskEndpoints
             return Results.Ok(task);
         });
 
-        app.MapPost("/tasks", async (ITaskService service, CreateTaskDto dto) =>
+        app.MapPost("/tasks", async (ITaskService service, CreateTaskDto dto, IValidator<CreateTaskDto> validator) =>
         {
+            var validationResults = await validator.ValidateAsync(dto);
+
+            if (!validationResults.IsValid)
+            {
+                return Results.BadRequest(validationResults.Errors);
+            }
+
             var created = await service.CreateAsync(dto);
             return Results.Created($"tasks{created.Id}", created);
         });
 
-        app.MapPut("/tasks/{id:int}", async (ITaskService service, int id, UpdateTaskDto dto) =>
+        app.MapPut("/tasks/{id:int}", async (ITaskService service, int id, UpdateTaskDto dto, IValidator<UpdateTaskDto> validator) =>
         {
+            var validationResults = await validator.ValidateAsync(dto);
+
+            if (!validationResults.IsValid)
+            {
+                return Results.BadRequest(validationResults.Errors);
+            }
+
             var updated = await service.UpdateAsync(id, dto);
 
             if (updated == null)
