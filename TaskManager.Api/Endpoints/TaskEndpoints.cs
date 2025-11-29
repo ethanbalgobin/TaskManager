@@ -83,6 +83,20 @@ public static class TaskEndpoints
             return Results.Ok();
         });
 
+        app.MapGet("tasks/paged", async (
+            ITaskService service,
+            int page,
+            int pageSize,
+            string? sortyBy,
+            string? direction,
+            bool? isComplete,
+            string? search) =>
+        {
+            var result = await service.GetPagedAsync(page, pageSize, sortyBy, direction, isComplete, search);
+
+            return Results.Ok(result);
+        });
+
         return app;
     }
 }
