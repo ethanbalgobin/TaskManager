@@ -1,14 +1,17 @@
-import { useEffect } from "react";
-import { TasksApi } from "./api/tasksApi";
+import { useTasks } from "./hooks/useTasks";
 
 function App() {
-  useEffect(() => {
-    TasksApi.getPaged(1, 10)
-      .then((data) => console.log("API OK:", data))
-      .catch((err) => console.error("API ERROR: ", err));
-  }, []);
+  const { data, isLoading, error } = useTasks(1, 10);
 
-  return <h1>Task Manager UI</h1>;
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error loading tasks</p>;
+
+  return (
+    <div>
+      <h1>Tasks Loaded via React Query</h1>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+    </div>
+  );
 }
 
 export default App;
