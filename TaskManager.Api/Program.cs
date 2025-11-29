@@ -1,14 +1,28 @@
-using TaskManager.Api.Data;
-using TaskManager.Api.Services.Interfaces;
-using TaskManager.Api.Services.Implementations;
-using TaskManager.Api.Endpoints;
-using Microsoft.EntityFrameworkCore;
-using Swashbuckle.AspNetCore.SwaggerUI;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Serilog;
 using FluentValidation;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using TaskManager.Api.Data;
+using TaskManager.Api.Endpoints;
+using TaskManager.Api.Services.Implementations;
+using TaskManager.Api.Services.Interfaces;
 using TaskManager.Api.Validators;
 
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .Enrich.WithEnvironmentName()
+    .Enrich.WithMachineName()
+    .Enrich.WithProcessId()
+    .Enrich.WithThreadId()
+    .WriteTo.Console()
+    .WriteTo.File("logs/logs.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog();
 
 // Database
 builder.Services.AddDbContext<TaskDbContext>(options =>
@@ -25,6 +39,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateTaskValidator>();
 
 var app = builder.Build();
+
+// Serilog
+app.UseSerilogRequestLogging();
+
+// Error Handling Middleware
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseSwagger();
 app.UseSwaggerUI();
