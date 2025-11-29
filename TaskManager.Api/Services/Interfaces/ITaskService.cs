@@ -1,6 +1,7 @@
 ﻿namespace TaskManager.Api.Services.Interfaces;
 
 using TaskManager.Api.DTOs;
+using TaskManager.Api.Models;
 
 public interface ITaskService
 {
@@ -15,4 +16,12 @@ public interface ITaskService
     Task<bool> DeleteAsync(int id);
 
     Task<bool> MarkCompleteAsync(int id);
+
+    Task<PagedResult<TaskResponseDto>> GetPagedAsync(
+        int page,
+        int pageSize,
+        string? sortBy,
+        string? direction,
+        bool? isComplete,
+        string? search);
 }

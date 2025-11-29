@@ -146,4 +146,58 @@ public class TaskService : ITaskService
         return true;
 
     }
+
+    public async Task<PagedResult<TaskResponseDto>> GetPagedAsync(
+        int page,
+        int pageSize,
+        string? sortBy,
+        string? direction,
+        bool? isComplete,
+        string? search)
+    {
+        var query = _context.Tasks.AsQueryable();
+
+        if (isComplete.HasValue)
+        {
+            query = query.Where(t => t.IsComplete == isComplete.Value);
+        }
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(t => t.Title.Contains(search));
+        }
+
+
+        bool descending = direction?.ToLower() == "desc";
+
+        query = (sortBy?.ToLower()) switch
+        {
+            "title" => descending ? query.OrderByDescending(t => t.Title) : query.OrderBy(t => t.Title),
+
+            "duedate" => descending ? query.OrderByDescending(t => t.DueDate) : query.OrderBy(t => t.DueDate),
+
+            "createdon" => descending ? query.OrderByDescending(t => t.CreatedOn) : query.OrderBy(t => t.CreatedOn),
+
+            _ => descending ? query.OrderByDescending(t => t.Id) : query.OrderBy(t => t.Id)
+        };
+
+
+        int totalCount = await query.CountAsync();
+
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PagedResult<TaskResponseDto>
+        {
+            Items = items.Select(MapToDto).ToList(),
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
+        };
+
+        
+    }
 }
