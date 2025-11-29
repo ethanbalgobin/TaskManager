@@ -1,0 +1,23 @@
+// Light theme default
+:root {
+  --bg: #{$color-light-bg};
+  --text: #{$color-light-text};
+  --muted: #{$color-light-muted};
+
+  --accent: #{$color-accent};
+  --accent-hover: #{$color-accent-hover};
+
+  --status-ok: #{$color-status-ok};
+  --status-warn: #{$color-status-warn};
+  --status-danger: #{$color-status-danger};
+}
+
+// Dark theme overrides
+.dark-mode {
+  --bg: #{$color-dark-bg};
+  --text: #{$color-dark-text};
+  --muted: #{$color-dark-muted};
+
+  --accent: #{$color-accent};
+  --accent-hover: #{$color-accent-hover};
+}

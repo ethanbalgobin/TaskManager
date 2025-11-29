@@ -1,0 +1,44 @@
+@use './variables';
+@use './themes';
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: Inter, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+button {
+    background: var(--accent);
+    color: #fff;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+        background: var(--accent-hover);
+    }
+}
+
+.task-status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.5rem;
+
+    &.ok {
+        background-color: var(--status-ok);
+    }
+
+    &.warn {
+        background-color: var(--status-warn);
+    }
+
+    &.danger {
+        background-color: var(--status-danger);
+    }
+}
