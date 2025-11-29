@@ -1,7 +1,7 @@
-using Serilog;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using TaskManager.Api.Data;
@@ -26,7 +26,8 @@ builder.Host.UseSerilog();
 
 // Database
 builder.Services.AddDbContext<TaskDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 // Services
 builder.Services.AddScoped<ITaskService, TaskService>();
@@ -38,6 +39,19 @@ builder.Services.AddSwaggerGen();
 // API Validator
 builder.Services.AddValidatorsFromAssemblyContaining<CreateTaskValidator>();
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
+        }
+    );
+});
+
 var app = builder.Build();
 
 // Serilog
@@ -46,6 +60,9 @@ app.UseSerilogRequestLogging();
 // Error Handling Middleware
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
+app.UseCors(MyAllowSpecificOrigins);
+app.UseHttpsRedirection();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -53,4 +70,3 @@ app.UseSwaggerUI();
 app.MapTaskEndpoints();
 
 app.Run();
-
