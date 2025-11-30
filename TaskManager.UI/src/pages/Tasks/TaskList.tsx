@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useTasks } from "../../hooks/useTasks";
+import { useTasksMutation } from "../../hooks/useTaskMutations";
+import { useNavigate } from "react-router-dom";
 import type { Task } from "../../api/tasksApi";
 
 export default function TaskList() {
@@ -86,18 +88,30 @@ export default function TaskList() {
 }
 
 function TaskListItem({ task }: { task: Task }) {
+  const navigate = useNavigate();
   const status = getStatus(task);
+  const { deleteTask, completeTask } = useTasksMutation();
 
   return (
     <li className="task-item">
       <span className={`task-status-dot ${status}`} />
 
-      <div>
+      <div className="task-info">
         <strong>{task.title}</strong>
         {task.description && (
-          <p style={{ margin: "0.25rem 0", opacity: 0.8 }}>
+          <p style={{ margin: "0.25rem 0", opacity: "0.8" }}>
             {task.description}
           </p>
+        )}
+      </div>
+
+      <div className="task-actions">
+        <button onClick={() => navigate(`/tasks/${task.id}/edit`)}>Edit</button>
+        <button onClick={() => deleteTask.mutate(task.id)}>Delete</button>
+        {!task.isComplete && (
+          <button onClick={() => completeTask.mutate(task.id)}>
+            Mark Complete
+          </button>
         )}
       </div>
     </li>
