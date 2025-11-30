@@ -91,5 +91,12 @@ export function useTaskMutations() {
     },
   });
 
-  return { deleteTask, completeTask, updateTask };
+  const createTask = useMutation({
+    mutationFn: (dto: any) => TasksApi.create(dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
+  return { deleteTask, completeTask, updateTask, createTask };
 }

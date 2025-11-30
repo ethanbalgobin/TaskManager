@@ -37,17 +37,22 @@ export const TasksApi = {
   },
 
   markComplete: async (id: number) => {
-    const response = await axiosClient.put(`tasks/${id}/complete`);
+    const response = await axiosClient.put(`/tasks/${id}/complete`);
     return response.data;
   },
 
   getById: async (id: number) => {
-    const response = await axiosClient.get(`tasks/${id}`);
+    const response = await axiosClient.get(`/tasks/${id}`);
     return response.data;
   },
 
   update: async (id: number, dto: any) => {
-    const response = await axiosClient.put(`tasks/${id}`, dto);
+    const response = await axiosClient.put(`/tasks/${id}`, dto);
+    return response.data;
+  },
+
+  create: async (dto: any) => {
+    const response = await axiosClient.post("/tasks", dto);
     return response.data;
   },
 };
