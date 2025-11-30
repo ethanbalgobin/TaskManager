@@ -7,7 +7,7 @@ import type { Task } from "../../api/tasksApi";
 export default function TaskList() {
   const [page, setPage] = useState(1);
   const pageSize = 10;
-
+  const navigate = useNavigate();
   const [sortBy, setSortBy] = useState("createdon");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
@@ -25,6 +25,8 @@ export default function TaskList() {
 
   return (
     <div>
+      <button onClick={() => navigate("/tasks/new")}>+ New Task</button>
+
       <div style={{ marginBottom: "1rem" }}>
         <select
           value={`${sortBy}-${sortDirection}`}

@@ -10,7 +10,7 @@ export const router = createBrowserRouter([
     path: "/",
     element: <AppLayout />,
     children: [
-      { path: "/", element: <TaskList /> },
+      { index: true, element: <TaskList /> },
       { path: "/tasks", element: <TaskList /> },
       { path: "/tasks/create", element: <TaskCreate /> },
       { path: "tasks/:id/edit", element: <TaskEdit /> },
