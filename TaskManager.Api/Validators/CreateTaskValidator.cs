@@ -15,8 +15,8 @@ namespace TaskManager.Api.Validators
                 .MaximumLength(2000).WithMessage("Description is too long. Maximum length is 2000 characters.");
 
             RuleFor(x => x.DueDate)
-                .GreaterThanOrEqualTo(DateTime.UtcNow).When(x => x.DueDate != null)
-                .WithMessage("Due date must be in the future");
+                .GreaterThanOrEqualTo(DateTime.UtcNow.Date).When(x => x.DueDate != null)
+                .WithMessage("Due date cannot be in the past");
         }
     }
 }
