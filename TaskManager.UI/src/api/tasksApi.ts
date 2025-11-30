@@ -30,4 +30,14 @@ export const TasksApi = {
     );
     return response.data;
   },
+
+  delete: async (id: number) => {
+    const response = await axiosClient.delete(`/tasks/${id}`);
+    return response.data;
+  },
+
+  markComplete: async (id: number) => {
+    const response = await axiosClient.put(`tasks/${id}/complete`);
+    return response.data;
+  },
 };
