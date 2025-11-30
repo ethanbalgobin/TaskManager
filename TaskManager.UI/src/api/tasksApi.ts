@@ -40,4 +40,14 @@ export const TasksApi = {
     const response = await axiosClient.put(`tasks/${id}/complete`);
     return response.data;
   },
+
+  getById: async (id: number) => {
+    const response = await axiosClient.get(`tasks/${id}`);
+    return response.data;
+  },
+
+  update: async (id: number, dto: any) => {
+    const response = await axiosClient.put(`tasks/${id}`, dto);
+    return response.data;
+  },
 };

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTasks } from "../../hooks/useTasks";
-import { useTasksMutation } from "../../hooks/useTaskMutations";
+import { useTaskMutations } from "../../hooks/useTaskMutations";
 import { useNavigate } from "react-router-dom";
 import type { Task } from "../../api/tasksApi";
 
@@ -90,7 +90,7 @@ export default function TaskList() {
 function TaskListItem({ task }: { task: Task }) {
   const navigate = useNavigate();
   const status = getStatus(task);
-  const { deleteTask, completeTask } = useTasksMutation();
+  const { deleteTask, completeTask } = useTaskMutations();
 
   return (
     <li className="task-item">
