@@ -14,11 +14,36 @@ $color-dark-text: #f2f2f2;
 $color-dark-muted: #9e9e9e;
 
 // Task Status Colors
-$color-status-ok: #4caf50; // far from due date
-$color-status-warn: #ff9800;// close to due date
-$color-status-danger: #ff5252; // due today or overdue
+$color-status-ok: #4caf50;
+$color-status-warn: #ff9800;
+$color-status-danger: #ff5252;
 
 // Toast Notification Colors
 $color-toast-success: #4caf50;
 $color-toast-info: #2196f3;
 $color-toast-error: #f44336;
+
+:root {
+  /* Status dots */
+  --status-ok: #{$color-status-ok};
+  --status-warn: #{$color-status-warn};
+  --status-danger: #{$color-status-danger};
+
+  /* Muted text */
+  --muted: #{$color-light-muted};
+
+  /* Buttons */
+  --accent: #{$color-accent};
+  --accent-hover: #{$color-accent-hover};
+}
+
+[data-theme="dark"] {
+  --status-ok: #{$color-status-ok};
+  --status-warn: #{$color-status-warn};
+  --status-danger: #{$color-status-danger};
+
+  --muted: #{$color-dark-muted};
+
+  --accent: #{$color-accent};
+  --accent-hover: #{$color-accent-hover};
+}
