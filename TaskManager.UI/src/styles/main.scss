@@ -1,5 +1,6 @@
-@use './variables';
-@use './themes';
+@use "./variables";
+@use "./themes";
+@use "./components/taskList";
 
 body {
     background-color: var(--bg);
@@ -20,25 +21,5 @@ button {
 
     &:hover {
         background: var(--accent-hover);
-    }
-}
-
-.task-status-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 0.5rem;
-
-    &.ok {
-        background-color: var(--status-ok);
-    }
-
-    &.warn {
-        background-color: var(--status-warn);
-    }
-
-    &.danger {
-        background-color: var(--status-danger);
     }
 }

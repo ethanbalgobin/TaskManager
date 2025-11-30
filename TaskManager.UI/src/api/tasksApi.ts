@@ -19,9 +19,14 @@ export interface PagedResult<T> {
 }
 
 export const TasksApi = {
-  getPaged: async (page: number, pageSize: number) => {
+  getPaged: async (
+    page: number,
+    pageSize: number,
+    direction: "asc" | "desc",
+    sortBy: string
+  ) => {
     const response = await axiosClient.get<PagedResult<Task>>(
-      `tasks/paged?page=${page}&pageSize=${pageSize}`
+      `tasks/paged?page=${page}&pageSize=${pageSize}&sortBy=${sortBy}&direction=${direction}`
     );
     return response.data;
   },

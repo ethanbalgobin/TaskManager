@@ -168,7 +168,7 @@ public class TaskService : ITaskService
         }
 
 
-        bool descending = direction?.ToLower() == "desc";
+        bool descending = string.Equals(direction, "desc", StringComparison.OrdinalIgnoreCase);
 
         query = (sortBy?.ToLower()) switch
         {
