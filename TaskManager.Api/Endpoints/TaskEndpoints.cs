@@ -87,12 +87,12 @@ public static class TaskEndpoints
             ITaskService service,
             int page,
             int pageSize,
-            string? sortyBy,
+            string? sortBy,
             string? direction,
             bool? isComplete,
             string? search) =>
         {
-            var result = await service.GetPagedAsync(page, pageSize, sortyBy, direction, isComplete, search);
+            var result = await service.GetPagedAsync(page, pageSize, sortBy, direction, isComplete, search);
 
             return Results.Ok(result);
         });

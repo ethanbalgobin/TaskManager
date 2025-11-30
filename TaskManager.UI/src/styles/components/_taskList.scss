@@ -1,0 +1,27 @@
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--muted);
+}
+
+.task-status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.5rem;
+
+    &.ok {
+        background-color: var(--status-ok);
+    }
+
+    &.warn {
+        background-color: var(--status-warn);
+    }
+
+    &.danger {
+        background-color: var(--status-danger);
+    }
+}
