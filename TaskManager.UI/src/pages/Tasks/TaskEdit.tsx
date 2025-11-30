@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { TasksApi } from "../../api/tasksApi";
 import { useTaskMutations } from "../../hooks/useTaskMutations";
 import { useState, useEffect } from "react";
+import { useToast } from "../../components/toast/useToast";
 
 export default function EditTaskPage() {
   const { id } = useParams();
@@ -10,6 +11,7 @@ export default function EditTaskPage() {
   const taskId = Number(id);
 
   const { updateTask, deleteTask, completeTask } = useTaskMutations();
+  const { addToast } = useToast();
 
   // Fetch existing task
   const { data, isLoading, error } = useQuery({
@@ -45,20 +47,29 @@ export default function EditTaskPage() {
         },
       },
       {
-        onSuccess: () => navigate("/tasks"),
+        onSuccess: () => {
+          addToast("Changes saved", "success");
+          navigate("/tasks");
+        },
       }
     );
   }
 
   function handleDelete() {
     deleteTask.mutate(taskId, {
-      onSuccess: () => navigate("/tasks"),
+      onSuccess: () => {
+        addToast("Task Deleted", "success");
+        navigate("/tasks");
+      },
     });
   }
 
   function handleComplete() {
     completeTask.mutate(taskId, {
-      onSuccess: () => navigate("/tasks"),
+      onSuccess: () => {
+        addToast("Task Complete", "success");
+        navigate("/tasks");
+      },
     });
   }
 
@@ -75,7 +86,7 @@ export default function EditTaskPage() {
         }}
       >
         <label>
-          Title  
+          Title
           <input
             type="text"
             value={title}
@@ -85,7 +96,7 @@ export default function EditTaskPage() {
         </label>
 
         <label>
-          Description  
+          Description
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -94,7 +105,7 @@ export default function EditTaskPage() {
         </label>
 
         <label>
-          Due Date  
+          Due Date
           <input
             type="date"
             value={dueDate}

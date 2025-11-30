@@ -3,6 +3,7 @@ import { useTasks } from "../../hooks/useTasks";
 import { useTaskMutations } from "../../hooks/useTaskMutations";
 import { useNavigate } from "react-router-dom";
 import type { Task } from "../../api/tasksApi";
+import { useToast } from "../../components/toast/useToast";
 
 export default function TaskList() {
   const [page, setPage] = useState(1);
@@ -25,7 +26,7 @@ export default function TaskList() {
 
   return (
     <div>
-      <button onClick={() => navigate("/tasks/new")}>+ New Task</button>
+      <button onClick={() => navigate("/tasks/create")}>+ New Task</button>
 
       <div style={{ marginBottom: "1rem" }}>
         <select
@@ -93,6 +94,25 @@ function TaskListItem({ task }: { task: Task }) {
   const navigate = useNavigate();
   const status = getStatus(task);
   const { deleteTask, completeTask } = useTaskMutations();
+  const { addToast } = useToast();
+
+  function handleDelete() {
+    deleteTask.mutate(task.id, {
+      onSuccess: () => {
+        addToast("Task deleted.", "info");
+      },
+      onError: () => {
+        addToast("Failed to delete task", "error");
+      },
+    });
+  }
+
+  function handleComplete() {
+    completeTask.mutate(task.id, {
+      onSuccess: () => addToast("Task completed!", "success"),
+      onError: () => addToast("Error marking task as complete", "error"),
+    });
+  }
 
   return (
     <li className="task-item">
@@ -109,11 +129,9 @@ function TaskListItem({ task }: { task: Task }) {
 
       <div className="task-actions">
         <button onClick={() => navigate(`/tasks/${task.id}/edit`)}>Edit</button>
-        <button onClick={() => deleteTask.mutate(task.id)}>Delete</button>
+        <button onClick={handleDelete}>Delete</button>
         {!task.isComplete && (
-          <button onClick={() => completeTask.mutate(task.id)}>
-            Mark Complete
-          </button>
+          <button onClick={handleComplete}>Mark Complete</button>
         )}
       </div>
     </li>

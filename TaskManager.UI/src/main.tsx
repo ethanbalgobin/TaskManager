@@ -6,11 +6,17 @@ import { queryClient } from "./lib/queryClient.ts";
 import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router/routes.tsx";
+import { ToastProvider } from "./components/toast/ToastProvider.tsx";
+import ToastContainer from "./components/toast/ToastContainer.tsx";
+import "./styles/components/_toast.scss";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <ToastProvider>
+        <RouterProvider router={router} />
+        <ToastContainer />
+      </ToastProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </StrictMode>
