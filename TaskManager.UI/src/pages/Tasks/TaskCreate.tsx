@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTaskMutations } from "../../hooks/useTaskMutations";
+import { useToast } from "../../components/toast/useToast";
 
 export default function TaskCreate() {
   const navigate = useNavigate();
   const { createTask } = useTaskMutations();
+  const { addToast } = useToast();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -18,7 +20,13 @@ export default function TaskCreate() {
         dueDate: dueDate ? new Date(dueDate).toISOString() : null,
       },
       {
-        onSuccess: () => navigate("/tasks"),
+        onSuccess: () => {
+          addToast("Task created successfully!", "success");
+          navigate("/tasks");
+        },
+        onError: () => {
+          addToast("Failed to create task", "error");
+        },
       }
     );
   }

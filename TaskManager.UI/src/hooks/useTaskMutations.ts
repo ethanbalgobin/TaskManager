@@ -8,38 +8,13 @@ export function useTaskMutations() {
   const deleteTask = useMutation({
     mutationFn: (id: number) => TasksApi.delete(id),
 
-    onMutate: async (id: number) => {
-      // Pause all tasks queries
-      await queryClient.cancelQueries({ queryKey: ["tasks"] }); // Snapshot all affected queries
-
-      const previousQueries = queryClient.getQueriesData({
-        queryKey: ["tasks"],
-      });
-
-      previousQueries.forEach(([key, old]: any) => {
-        if (!old) return;
-
-        queryClient.setQueryData(key, {
-          ...old,
-          items: old.items.filter((t: any) => t.id !== id),
-        });
-      });
-
-      return { previousQueries };
+    onSuccess: () => {
+      // Force refresh all tasks queries
+      queryClient.invalidateQueries({ queryKey: ["tasks"], exact: false });
     },
 
-    onError: (_err, _id, context) => {
-      // Rollback if mutation fails
-      if (context?.previousQueries) {
-        context.previousQueries.forEach(([key, data]: any) => {
-          queryClient.setQueryData(key, data);
-        });
-      }
-    },
-
-    onSettled: () => {
-      // Refetch all tasks queries
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    onError: () => {
+      // UI handles error toast
     },
   });
 
