@@ -4,6 +4,7 @@ import { useTaskMutations } from "../../hooks/useTaskMutations";
 import { useNavigate } from "react-router-dom";
 import type { Task } from "../../api/tasksApi";
 import { useToast } from "../../components/toast/useToast";
+import { useConfirmDialog } from "../../components/modal/useConfirmDialog";
 
 export default function TaskList() {
   const [page, setPage] = useState(1);
@@ -95,8 +96,18 @@ function TaskListItem({ task }: { task: Task }) {
   const status = getStatus(task);
   const { deleteTask, completeTask } = useTaskMutations();
   const { addToast } = useToast();
+  const { confirm } = useConfirmDialog();
 
-  function handleDelete() {
+  async function handleDelete() {
+    const ok = await confirm({
+      title: "Delete Task",
+      message: "Are you sure you want to delete this task?",
+      confirmText: "Delete",
+      cancelText: "Cancel",
+    });
+
+    if (!ok) return;
+
     deleteTask.mutate(task.id, {
       onSuccess: () => {
         addToast("Task deleted.", "info");
